@@ -1,0 +1,51 @@
+name: Deploy to Heroku
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-client:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Log in to Heroku Container Registry
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
+
+      - name: Build and push client Docker image
+        run: |
+          docker build --build-arg NODE_PORT=${{ secrets.FRONTEND_NODE_PORT }} --build-arg USER_ID=${{ secrets.USER_ID }} -t registry.heroku.com/${{ secrets.HEROKU_APP_NAME_CLIENT }}/web .
+          docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME_CLIENT }}/web
+
+      - name: Release client
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:release web --app ${{ secrets.HEROKU_APP_NAME_CLIENT }}
+
+  deploy-server:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Log in to Heroku Container Registry
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
+
+      - name: Build and push server Docker image
+        run: |
+          docker build --build-arg NODE_PORT=${{ secrets.BACKEND_NODE_PORT }} --build-arg USER_ID=${{ secrets.USER_ID }} -t registry.heroku.com/${{ secrets.HEROKU_APP_NAME_SERVER }}/web .
+          docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME_SERVER }}/web
+
+      - name: Release server
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:release web --app ${{ secrets.HEROKU_APP_NAME_SERVER }}
