@@ -1,0 +1,33 @@
+services:
+  frontend:
+    container_name: ${COMPOSE_PROJECT_NAME}
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      args:
+        NODE_VERSION: lts
+        NODE_PORT: ${FRONTEND_NODE_PORT}
+        USER_ID: ${USER_ID}
+    environment:
+      PORT: ${FRONTEND_NODE_PORT}
+      USER_ID: ${USER_ID}
+    ports:
+      - "${FRONTEND_NODE_PORT}:${FRONTEND_NODE_PORT}"
+    working_dir: /app
+    command: ["bash", "-c",  "corepack yarn install && cd /app/client/ && corepack yarn install && corepack yarn run build && corepack yarn run dev"]
+  backend:
+    container_name: ${COMPOSE_PROJECT_NAME}-backend
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      args:
+        NODE_VERSION: lts
+        NODE_PORT: ${BACKEND_NODE_PORT}
+        USER_ID: ${USER_ID}
+    environment:
+      PORT: ${BACKEND_NODE_PORT}
+      USER_ID: ${USER_ID}
+    ports:
+      - "${BACKEND_NODE_PORT}:${BACKEND_NODE_PORT}"
+    working_dir: /app
+    command: ["bash", "-c",  "corepack yarn install && cd /app/server/ && corepack yarn install && corepack yarn run build && corepack yarn run dev"]

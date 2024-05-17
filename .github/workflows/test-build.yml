@@ -1,0 +1,50 @@
+name: Test and Build
+
+on: [push, pull_request]
+
+jobs:
+  build-client:
+    runs-on: ubuntu-latest
+
+    services:
+      docker:
+        image: docker:19.03.12
+        options: --privileged
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build client container
+        run: docker build --target client -t client-app --build-arg NODE_VERSION=lts --build-arg NODE_PORT=$FRONTEND_NODE_PORT --build-arg USER_ID=$USER_ID -f ./Dockerfile .
+
+      - name: Test client app
+        run: docker run --rm client-app bash -c "corepack yarn install && corepack yarn build"
+
+  build-server:
+    runs-on: ubuntu-latest
+
+    services:
+      docker:
+        image: docker:19.03.12
+        options: --privileged
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build server container
+        run: docker build --target server -t server-app --build-arg NODE_VERSION=lts --build-arg NODE_PORT=$BACKEND_NODE_PORT --build-arg USER_ID=$USER_ID -f ./Dockerfile .
+
+      - name: Test server app
+        run: docker run --rm server-app bash -c "corepack yarn install && corepack yarn build"

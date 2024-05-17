@@ -9,7 +9,9 @@
     "compile-server": "tsc --build",
     "compile-server-watch": "tsc --build -w",
     "watch-server": "nodemon ./dist/src/index.js",
-    "start": "npm run compile-server-watch & npm run watch-server"
+    "start": "npm run compile-server-watch & npm run watch-server",
+    "build": "tsc --build",
+    "dev": "node ./dist/src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -26,5 +28,6 @@
     "graphql": "^16.8.1",
     "nodemon": "^3.1.0",
     "sqlite3": "^5.1.7"
-  }
+  },
+  "packageManager": "yarn@3.8.0"
 }

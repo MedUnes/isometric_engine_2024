@@ -19,7 +19,7 @@ import { closeModal, selectUiState } from "../state/features/ui/uiSlice";
 import { getModal } from "./modals/useModalSelector";
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:4000",
+  uri: "http://172.17.0.1:4000"
 });
 const authLink = setContext((_, { headers }) => {
   const authorization = store.getState().user.value.token;
