@@ -1,4 +1,5 @@
-[![Test and Build](https://github.com/MedUnes/isometric_engine_2024/actions/workflows/test-build.yml/badge.svg)](https://github.com/MedUnes/isometric_engine_2024/actions/workflows/test-build.yml)
+[![Client Build](https://github.com/MedUnes/isometric_engine_2024/actions/workflows/client-build.yml/badge.svg)](https://github.com/MedUnes/isometric_engine_2024/actions/workflows/client-build.yml)
+[![Server Build](https://github.com/MedUnes/isometric_engine_2024/actions/workflows/server-build.yml/badge.svg)](https://github.com/MedUnes/isometric_engine_2024/actions/workflows/server-build.yml)
 
 This is a casual attempt to make an isometric game / game engine.
 
