@@ -13,7 +13,11 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Build server container
-        run: docker build --build-arg NODE_PORT=$BACKEND_NODE_PORT --build-arg USER_ID=$USER_ID -t server-app .
+        run: |
+          docker build \
+          --build-arg NODE_PORT=$BACKEND_NODE_PORT \
+          --build-arg USER_ID=$USER_ID \
+          -t server-app -f ./server.Dockerfile .
 
       - name: build app
-        run: docker run --rm -e NODE_PORT=$FRONTEND_NODE_PORT -e USER_ID=$USER_ID client-app bash -c "cd /app && corepack yarn install && cd /app/server && corepack yarn install && corepack yarn build"
+        run: docker run --rm -e NODE_PORT=$FRONTEND_NODE_PORT -e USER_ID=$USER_ID server-app bash -c "cd /app && corepack yarn install && cd /app/server && corepack yarn install && corepack yarn build"
