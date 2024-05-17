@@ -24,7 +24,7 @@ jobs:
         run: docker build --target client -t client-app --build-arg NODE_VERSION=lts --build-arg NODE_PORT=$FRONTEND_NODE_PORT --build-arg USER_ID=$USER_ID -f ./Dockerfile .
 
       - name: Test client app
-        run: docker run --rm client-app bash -c "corepack yarn install && corepack yarn build"
+        run: docker run --rm client-app bash -c "cd /app && corepack yarn install && cd /app/client && corepack yarn install && corepack yarn build"
 
   build-server:
     runs-on: ubuntu-latest
@@ -47,4 +47,4 @@ jobs:
         run: docker build --target server -t server-app --build-arg NODE_VERSION=lts --build-arg NODE_PORT=$BACKEND_NODE_PORT --build-arg USER_ID=$USER_ID -f ./Dockerfile .
 
       - name: Test server app
-        run: docker run --rm server-app bash -c "corepack yarn install && corepack yarn build"
+        run: docker run --rm client-app bash -c "cd /app && corepack yarn install && cd /app/server && corepack yarn install && corepack yarn build"
